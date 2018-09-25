@@ -34,6 +34,8 @@ public slots:
 	void reVerify();
 	//ÇÐ»»ÓÃ»§
 	void switchUser();
+	//ÍË³ö
+	void exitExe();
 private:
 	Ui::FileClientClass ui;
 	Proj_Container projects;

@@ -1,10 +1,17 @@
 #include "util.h"
 #include "HttpOp.h"
 #include<qmessagebox.h>
+#include <qsettings.h>
 
 string	my_token = "";
 string	my_email = "";
 int		my_uid = -1;
+
+QSettings* setting = new QSettings("win.ini", QSettings::IniFormat);
+const string WEB_SERVER_IP = setting->value("WEB_SERVER_IP", "10.132.100.180").toString().toStdString();
+const string WEB_SERVER_PORT = setting->value("WEB_SERVER_PORT", "9091").toString().toStdString();;
+const string FILE_SERVER_IP = setting->value("FILE_SERVER_IP", "10.132.100.180").toString().toStdString();
+const string FILE_SERVER_PORT = setting->value("FILE_SERVER_PORT", "5566").toString().toStdString();
 
 string ERROR_STR[] = {
 	"NO_ERROR",
@@ -66,9 +73,9 @@ Py_Ret get_all_project(const string& email, const string& token) {
 	int timeout = 1000;
 	UDT::setsockopt(fhandle, 0, UDT_SNDTIMEO, (char*)&timeout, sizeof(int));
 	UDT::setsockopt(fhandle, 0, UDT_RCVTIMEO, (char*)&timeout, sizeof(int));
-	if (0 != getaddrinfo(SERVER_IP, SERVER_PORT, &hints, &peer))
+	if (0 != getaddrinfo(FILE_SERVER_IP.c_str(), FILE_SERVER_PORT.c_str(), &hints, &peer))
 	{
-		qDebug() << "incorrect server/peer address. " << SERVER_IP << ":" << SERVER_PORT << endl;
+		qDebug() << "incorrect server/peer address. " << FILE_SERVER_IP.c_str() << ":" << FILE_SERVER_PORT.c_str() << endl;
 		return Py_Ret(-1, "Failed to get address", -1);
 	}
 	// connect to the server, implict bind
@@ -203,14 +210,14 @@ bool isDir(const char *lpPath) {
 
 int API_TimeToString(string &strDateStr, const time_t &timeData)
 {
-	char chTmp[15];
+	char chTmp[50];
 	memset(chTmp, 0, sizeof(chTmp));
 	struct tm *p;
 	p = localtime(&timeData);
 	p->tm_year = p->tm_year + 1900;
 	p->tm_mon = p->tm_mon + 1;
-	snprintf(chTmp, sizeof(chTmp), "%04d-%02d-%02d",
-		p->tm_year, p->tm_mon, p->tm_mday);
+	snprintf(chTmp, sizeof(chTmp), "%04d-%02d-%02d %02d:%02d:%02d",
+		p->tm_year, p->tm_mon, p->tm_mday, p->tm_hour, p->tm_min, p->tm_sec);
 	strDateStr = chTmp;
 	return 0;
 }

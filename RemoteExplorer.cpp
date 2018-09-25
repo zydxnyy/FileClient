@@ -17,6 +17,39 @@ RemoteExplorer::~RemoteExplorer()
 {
 }
 
+bool RemoteExplorer::validPath() {
+	int slashCnt = 0;
+	string type, projectname;
+	int slashPos = -1;
+	for (int i = 0; i < path.size(); ++i) {
+		if (path.at(i) == '/') ++slashCnt;
+	}
+	switch (slashCnt) {
+	case 1:
+		/* 根目录 */
+		if (path.size() != 1) return false;
+		return true;
+	case 2:
+		if (path.front() != '/' || path.back() != '/') return false;
+		type = path.substr(1, path.size() - 2);
+		//不属于三类
+		if (type != TYPE[0] && type != TYPE[1] && type != TYPE[2]) return false;
+		return true;
+	case 3:
+		if (path.front() != '/' || path.back() != '/') return false;
+		slashPos = path.find('/', 1);
+		type = path.substr(1, slashPos - 1);
+		projectname = path.substr(slashPos + 1, path.size() - slashPos - 2);
+		//不属于三类
+		if (type != TYPE[0] && type != TYPE[1] && type != TYPE[2]) return false;
+		//没有找到项目名
+		for (int i = 0; i < pProjects->size(); ++i) if (projectname == pProjects->at(i)->name) return true;
+		return false;
+	default:
+		return false;
+	}
+}
+
 void RemoteExplorer::getFileList()
 {
 	int slashPos = path.find('/', 1);
@@ -27,7 +60,7 @@ void RemoteExplorer::getFileList()
 			int filesize = 0;
 			bool isDir = true;
 			if (my_uid == pProjects->at(i)->uid) projname += "*";
-			fileList.push_back(MyFile(isDir, "", projname, filesize, 0, "", "/"+projname+"/", "*"));
+			fileList.push_back(MyFile(isDir, "", projname, filesize, 0, "*", "/"+projname+"/", "*"));
 		}
 	}
 	else {

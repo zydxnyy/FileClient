@@ -63,9 +63,12 @@ string ERROR_STR[];
 #define File_Container vector<MyFile>
 #define Proj_Container vector<Proj*>
 
-extern string	my_token;
-extern string	my_email;
-extern int		my_uid;
+extern string			my_token;
+extern string			my_email;
+extern int				my_uid;
+extern const string		WEB_SERVER_IP, WEB_SERVER_PORT;
+extern const string		FILE_SERVER_IP, FILE_SERVER_PORT;
+
 const int CHUNK_SIZE = 1 * 1 << 10;
 
 struct Py_Ret {
@@ -90,9 +93,10 @@ struct MyFile {
 	string email;
 	string path;
 	string fileHash;
-	MyFile(bool isDir, const string& projname, const string& filename, size_t filesize, time_t uploadtime, string email, string path, string fileHash)
-		: isDir(isDir), projname(projname), filename(filename), filesize(filesize), uploadtime(uploadtime), email(email), path(path), fileHash(fileHash) {
-		qDebug() << path.c_str() << "New Hash = " << fileHash.c_str();
+	bool isDrive;
+	MyFile(bool isDir, const string& projname, const string& filename, size_t filesize, time_t uploadtime, string email, string path, string fileHash, bool isDrive=false)
+		: isDir(isDir), projname(projname), filename(filename), filesize(filesize), uploadtime(uploadtime), email(email), path(path), fileHash(fileHash), isDrive(isDrive) {
+		//qDebug() << path.c_str() << "New Hash = " << fileHash.c_str();
 	}
 
 	MyFile() {}
@@ -106,6 +110,7 @@ struct MyFile {
 		email = ano.email;
 		path = ano.path;
 		fileHash = ano.fileHash;
+		isDrive = ano.isDrive;
 	}
 
 	bool valid() {

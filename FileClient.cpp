@@ -6,13 +6,13 @@ FileClient::FileClient(QWidget *parent)
 	ui.setupUi(this);
 
 	//get_self_projects();
-	for (int i = 0; i < 5; ++i) {
-		if (get_projects() != -1) break;
-		else if (i == 4) {
-			QMessageBox::warning(NULL, "ALL WARNING", "获取远程目录失败");
-			exit(-1);
-		}
-	}
+	//for (int i = 0; i < 5; ++i) {
+	//	if (get_projects() != -1) break;
+	//	else if (i == 4) {
+	//		QMessageBox::warning(NULL, "ALL WARNING", "获取远程目录失败");
+	//		exit(-1);
+	//	}
+	//}
 
 	uploadWidget = new UploadWidget(&projects, this);
 	taskWidget = new TaskWidget(this);
@@ -32,6 +32,7 @@ FileClient::FileClient(QWidget *parent)
 	connect(action1, SIGNAL(triggered(bool)), this, SLOT(refresh()));
 	connect(action2, SIGNAL(triggered(bool)), this, SLOT(reVerify()));
 	connect(action3, SIGNAL(triggered(bool)), this, SLOT(switchUser()));
+	connect(action4, SIGNAL(triggered(bool)), this, SLOT(exitExe()));
 
 	connect(uploadWidget, SIGNAL(addUploadTask(const string&, const string&)), taskWidget, SLOT(addUploadTask(const string&, const string&)));
 	connect(uploadWidget, SIGNAL(addDownloadTask(const string&, const string&, const string&)), taskWidget, SLOT(addDownloadTask(const string&, const string&, const string&)));
@@ -135,6 +136,12 @@ void FileClient::switchUser()
 	Login* l = new Login(this);
 	l->exec();
 	refresh();
+}
+
+void FileClient::exitExe()
+{
+	if (QMessageBox::warning(this, "您正在退出", "确定要退出吗", QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
+		this->close();
 }
 
 void FileClient::updateFileDir(QString& _projname, MyFile* pfile) {

@@ -20,13 +20,13 @@ FileProp::FileProp(MyFile file, QDialog* parent):
 	ui.pathEdit->setText(QString::fromStdString(file.path));
 	ui.emailEdit->setText(QString::fromStdString(file.email));
 	qDebug() << "hash = " << file.fileHash.c_str();
-	if (file.fileHash != "" || file.isDir) {
+	if (file.fileHash != "") {
 		ui.fileHashEdit->setText(QString::fromStdString(file.fileHash.c_str()));
-		qDebug() << "!!!Hashing " << file.path.c_str();
+		//qDebug() << "!!!Hashing " << file.path.c_str();
 	}
 	else {
 		ui.fileHashEdit->setText(QString::fromStdString(hashFile(file.path.c_str())));
-		qDebug() << "Hashing " << file.path.c_str();
+		//qDebug() << "Hashing " << file.path.c_str();
 	}
 }
 

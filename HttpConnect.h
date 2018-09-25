@@ -12,8 +12,8 @@ class HttpConnect
 	int port;
 public:
 
-	HttpConnect(int port);
-	void HttpConnect::socketHttp(string host, string request);
+	HttpConnect(string port);
+	int HttpConnect::socketHttp(string host, string request);
 	string HttpConnect::postData(std::string host, std::string path, std::string post_content);
 	string HttpConnect::getData(std::string host, std::string path, std::string get_content);
 

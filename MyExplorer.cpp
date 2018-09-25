@@ -3,8 +3,8 @@
 #include <qlistwidget.h>
 
 
-MyExplorer::MyExplorer(QWidget* parent):
-	QWidget(parent), path("/")
+MyExplorer::MyExplorer(QWidget* parent, string path):
+	QWidget(parent), path(path)
 {
 	ui.setupUi(this);
 	history.push(path);
@@ -58,6 +58,9 @@ void MyExplorer::setBtnStatus()
 
 QPixmap setFileIcon(MyFile file)
 {
+	if (file.isDrive) {
+		return QPixmap("pic/drive.png");
+	}
 	if (file.isDir) {
 		return QPixmap("pic/ÎÄ¼þ¼Ð.png");
 	}
@@ -136,4 +139,15 @@ void MyExplorer::previous()
 
 
 void MyExplorer::enterPress() {
+	QString p = ui.pathEdit->text();
+	if (p.back() != '/' && p.back() != '\\') p.append('/');
+	ui.pathEdit->setText(p);
+	if (validPath()) {
+		path = ui.pathEdit->text().replace('\\', "/").toStdString();
+		history.push(path);
+		updateFileList();
+	}
+	else {
+		ui.pathEdit->setText(path.c_str());
+	}
 }

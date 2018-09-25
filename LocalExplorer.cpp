@@ -4,20 +4,19 @@
 #include <qmenu.h>
 
 LocalExplorer::LocalExplorer(QWidget* parent) :drive("C:"),
-	MyExplorer(parent)
+	MyExplorer(parent, "C:/")
 {
 	updateFileList();
-	box = new QComboBox(this);
+	//box = new QComboBox(this);
 	drives = new QDir();
-	QFileInfoList list = drives->drives();
-	for (int i = 0; i < list.size(); ++i) {
-		box->addItem(QIcon("pic/drive.png"), list[i].filePath());
-	}
-	connect(box, SIGNAL(currentIndexChanged(int)), this, SLOT(indexChangedSlot(int)));
+	//QFileInfoList list = drives->drives();
+	//for (int i = 0; i < list.size(); ++i) {
+		//box->addItem(QIcon("pic/drive.png"), list[i].filePath());
+	//}
 	connect(ui.listWidget, SIGNAL(acceptFileName(QString)), this, SLOT(acceptFileName(QString)));
 	connect(ui.listWidget, SIGNAL(acceptUrl(QUrl)), this, SLOT(acceptUrl(QUrl)));
-	box->setGeometry(10, 20, 200, 30);
-	box->show();
+	//box->setGeometry(10, 20, 200, 30);
+	//box->show();
 }
 
 
@@ -27,21 +26,31 @@ LocalExplorer::~LocalExplorer()
 
 void LocalExplorer::getFileList()
 {
+	//显示所有系统盘盘
+	if (path.empty()) {
+		QFileInfoList list = drives->drives();
+		for (int i = 0; i < list.size(); ++i) {
+			fileList.push_back(MyFile(list[i].isDir(), "", list[i].fileName().toStdString(), list[i].size(), list[i].created().toTime_t(), "*", list[i].absoluteFilePath().toStdString(), "*", true));
+		}
+		return;
+	}
+
 	//qDebug() << (drive + path).c_str();
 	QDir* dir = new QDir();
-	dir->cd((drive + path).c_str());
-	dir->setFilter(QDir::NoDotAndDotDot | QDir::AllEntries);
+	dir->cd(path.c_str());
+	dir->setFilter(QDir::NoDotAndDotDot | QDir::AllEntries | QDir::Drives);
 	dir->setSorting(QDir::DirsFirst | QDir::Name);
 	QFileInfoList list = dir->entryInfoList();
 	for (int i = 0; i < list.size(); ++i) {
 		if (hasSuffix(list[i].fileName().toStdString(), ".ft.nc")) continue;
-		fileList.push_back(MyFile(list[i].isDir(), "", list[i].fileName().toStdString(), list[i].size(), list[i].created().toTime_t(), "*", list[i].absoluteFilePath().toStdString(), ""));
+		if(list[i].isDir()) fileList.push_back(MyFile(list[i].isDir(), "", list[i].fileName().toStdString(), list[i].size(), list[i].created().toTime_t(), "*", list[i].absoluteFilePath().toStdString(), "*"));
+		else  fileList.push_back(MyFile(list[i].isDir(), "", list[i].fileName().toStdString(), list[i].size(), list[i].created().toTime_t(), "*", list[i].absoluteFilePath().toStdString(), ""));
 	}
 }
 
 string LocalExplorer::getDirPath()
 {
-	return drive + path;
+	return path;
 }
 
 string LocalExplorer::getFilePath()
@@ -49,20 +58,19 @@ string LocalExplorer::getFilePath()
 	int row = ui.listWidget->currentRow();
 	if (row != -1) {
 		string filename = fileList[row].filename;
-		return drive + path + filename;
+		return path + filename;
 	}
 	return "";
 }
 
 int LocalExplorer::indexChangedSlot(int index) {
 	//qDebug() << "indexChangedSlot" << " " << index << endl;
-	drives = new QDir();
-	QFileInfoList list = drives->drives();
-	drive = list[index].filePath().toStdString();
-	clearHistory();
-	path = "/";
-	history.push(path);
-	updateFileList();
+	//QFileInfoList list = drives->drives();
+	//drive = list[index].filePath().toStdString();
+	//clearHistory();
+	//path = "/";
+	//history.push(path);
+	//updateFileList();
 	return 0;
 }
 
@@ -108,6 +116,13 @@ void LocalExplorer::menu(QPoint point)
 	else {
 
 	}
+}
+
+bool LocalExplorer::validPath() {
+	QString p = ui.pathEdit->text().replace('\\', '/');
+	if (p.isEmpty()) return true;
+	if (p.back() != '/') return false;
+	return QFileInfo(p).isDir();
 }
 
 void LocalExplorer::openFile(bool)

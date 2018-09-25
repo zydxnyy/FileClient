@@ -12,6 +12,7 @@ class RemoteExplorer :
 public:
 	RemoteExplorer(Proj_Container* pProj, QWidget* parent = 0);
 	~RemoteExplorer();
+	virtual bool validPath();
 
 signals:
 	void dragFileUpload(string);
@@ -27,11 +28,13 @@ public slots:
 	void delFile(bool);
 	void downloadFile(bool); 
 	void openProperty(bool);
-
+	 
 	virtual void getFileList();
 	Proj* getProject();
 private:
 	Proj_Container* pProjects;
 	QListWidgetItem* item;
+
+	const string TYPE[3] = { "Protein", "P1", "P2" };
 };
 

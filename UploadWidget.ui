@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>UploadWidget</class>
+ <widget class="QWidget" name="UploadWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1190</width>
+    <height>550</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1190</width>
+    <height>550</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1190</width>
+    <height>550</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QPushButton" name="uploadBtn">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>240</y>
+     <width>80</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="downloadBtn">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>280</y>
+     <width>80</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>uploadBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>UploadWidget</receiver>
+   <slot>uploadSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>551</x>
+     <y>240</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>637</x>
+     <y>250</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>downloadBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>UploadWidget</receiver>
+   <slot>downloadSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>565</x>
+     <y>289</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>650</x>
+     <y>334</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>uploadSlot()</slot>
+  <slot>downloadSlot()</slot>
+ </slots>
+</ui>

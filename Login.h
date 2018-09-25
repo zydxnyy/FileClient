@@ -5,6 +5,7 @@
 #include <iostream>
 #include <Python.h>
 #include <qdebug.h>
+#include <thread>
 #include "util.h"
 #include "ui_Login.h"
 #pragma execution_character_set("utf-8")
@@ -18,8 +19,12 @@ public:
 	Login(QWidget *parent = Q_NULLPTR);
 	~Login();
 
+signals:
+	void loginDone(Py_Ret);
+
 public slots:
 	int login_slot();
+	void loginDoneSlot(Py_Ret);
 
 private:
 	Ui::Dialog ui;

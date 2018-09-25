@@ -3,9 +3,9 @@
 #include "util.h"
 #pragma comment(lib,"ws2_32.lib")
 
-HttpConnect::HttpConnect(int port)
+HttpConnect::HttpConnect(string port)
 {
-	this->port = port;
+	this->port = atoi(port.c_str());
 	//此处一定要初始化一下，否则gethostbyname返回一直为空
 	WSADATA wsa = { 0 };
 	WSAStartup(MAKEWORD(2, 2), &wsa);
@@ -17,7 +17,7 @@ HttpConnect::~HttpConnect()
 	delete[] reply;
 }
 
-void HttpConnect::socketHttp(string host, string request) {
+int HttpConnect::socketHttp(string host, string request) {
 	qDebug() << host.c_str() << request.c_str();
 	int sockfd;
 	struct sockaddr_in address;
@@ -29,10 +29,12 @@ void HttpConnect::socketHttp(string host, string request) {
 	memcpy((char *)&address.sin_addr.s_addr, (char*)server->h_addr, server->h_length);
 	if (-1 == connect(sockfd, (struct sockaddr *)&address, sizeof(address))) {
 		qDebug() << "connection error!";
-		return;
+		return -1;
 	}
 
 	//qDebug() << request.c_str();
+	setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)new int(5000), sizeof(int));
+	setsockopt(sockfd, SOL_SOCKET, SO_SNDTIMEO, (const char*)new int(5000), sizeof(int));
 	send(sockfd, request.c_str(), request.size(), 0);
 	memset(reply, 0, 1024 * 1024);
 	int offset = 0;
@@ -40,8 +42,10 @@ void HttpConnect::socketHttp(string host, string request) {
 	while (rc = recv(sockfd, reply + offset, 1024, 0)) {
 		offset += rc;
 	}
+	if (rc == -1) return -1;
 	closesocket(sockfd);
 	reply[offset] = 0;
+	return 0;
 	//qDebug() << reply;
 }
 
@@ -67,8 +71,12 @@ string HttpConnect::postData(std::string host, std::string path, std::string pos
 
 	stream << "Connection:close\r\n\r\n";
 	stream << post_content.c_str();
-	socketHttp(host, stream.str());
-	return reply;
+	if (socketHttp(host, stream.str()) == 0) {
+		return reply;
+	}
+	else {
+		return "";
+	}
 }
 
 
@@ -91,6 +99,10 @@ string HttpConnect::getData(std::string host, std::string path, std::string get_
 
 	qDebug() << host.c_str() << stream.str().c_str();
 
-	socketHttp(host.c_str(), stream.str().c_str());
-	return reply;
+	if (socketHttp(host, stream.str()) == 0) {
+		return reply;
+	}
+	else {
+		return "";
+	}
 }

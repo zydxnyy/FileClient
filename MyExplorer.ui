@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MyExplorer</class>
+ <widget class="QWidget" name="MyExplorer">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>530</width>
+    <height>540</height>
+   </rect>
+  </property>
+  <property name="acceptDrops">
+   <bool>true</bool>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QPushButton" name="prevBtn">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>100</y>
+     <width>70</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>后退</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="nextBtn">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>100</y>
+     <width>71</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>前进</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="outBtn">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>100</y>
+     <width>81</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>上一级</string>
+   </property>
+  </widget>
+  <widget class="MyListwidget" name="listWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>140</y>
+     <width>511</width>
+     <height>391</height>
+    </rect>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::CustomContextMenu</enum>
+   </property>
+   <property name="acceptDrops">
+    <bool>true</bool>
+   </property>
+   <property name="showDropIndicator" stdset="0">
+    <bool>false</bool>
+   </property>
+   <property name="dragEnabled">
+    <bool>true</bool>
+   </property>
+   <property name="dragDropOverwriteMode">
+    <bool>false</bool>
+   </property>
+   <property name="dragDropMode">
+    <enum>QAbstractItemView::DragDrop</enum>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="pathEdit">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>70</y>
+     <width>511</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="readOnly">
+    <bool>false</bool>
+   </property>
+   <property name="clearButtonEnabled">
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MyListwidget</class>
+   <extends>QListWidget</extends>
+   <header>mylistwidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>prevBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MyExplorer</receiver>
+   <slot>previous()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>67</x>
+     <y>121</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>35</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>nextBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MyExplorer</receiver>
+   <slot>next()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>132</x>
+     <y>115</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>146</x>
+     <y>-2</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>outBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MyExplorer</receiver>
+   <slot>outDir()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>231</x>
+     <y>116</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>290</x>
+     <y>24</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>listWidget</sender>
+   <signal>doubleClicked(QModelIndex)</signal>
+   <receiver>MyExplorer</receiver>
+   <slot>enterDirSlot(QModelIndex)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>464</x>
+     <y>169</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>442</x>
+     <y>42</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>listWidget</sender>
+   <signal>customContextMenuRequested(QPoint)</signal>
+   <receiver>MyExplorer</receiver>
+   <slot>menu(QPoint)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>343</x>
+     <y>198</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>359</x>
+     <y>107</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pathEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>MyExplorer</receiver>
+   <slot>enterPress()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>290</x>
+     <y>86</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>297</x>
+     <y>125</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>next()</slot>
+  <slot>previous()</slot>
+  <slot>outDir()</slot>
+  <slot>enterDirSlot(QModelIndex)</slot>
+  <slot>menu(QPoint)</slot>
+  <slot>enterPress()</slot>
+ </slots>
+</ui>

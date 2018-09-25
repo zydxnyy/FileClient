@@ -1,8 +1,11 @@
 #include "HttpOp.h"
 
 Py_Ret verify_account(string email, string password) {
-	HttpConnect* p = new HttpConnect(9091);
-	string res = p->postData(SERVER_IP, "/api/verify_account/", "email="+email+"&password="+password);
+	HttpConnect* p = new HttpConnect(WEB_SERVER_PORT);
+	string res = p->postData(WEB_SERVER_IP, "/api/verify_account/", "email="+email+"&password="+password);
+	if (res.empty()) {
+		return Py_Ret(-1, "服务器连接失败", -1);
+	}
 	res = res.substr(res.find("\r\n\r\n") + 4);
 	Json::Value root;
 	if (json_parse(res, root)) {
@@ -20,8 +23,11 @@ Py_Ret verify_account(string email, string password) {
 }
 
 Py_Ret getAllProject(string email, string token) {
-	HttpConnect* p = new HttpConnect(9091);
-	string res = p->postData(SERVER_IP, "/api/get_all_project/", "email=" + email + "&token=" + token);
+	HttpConnect* p = new HttpConnect(WEB_SERVER_PORT);
+	string res = p->postData(WEB_SERVER_IP, "/api/get_all_project/", "email=" + email + "&token=" + token);
+	if (res.empty()) {
+		return Py_Ret(-1, "服务器连接失败", -1);
+	}
 	res = res.substr(res.find("\r\n\r\n") + 4);
 	Json::Value root;
 	if (json_parse(res, root)) {
@@ -39,8 +45,11 @@ Py_Ret getAllProject(string email, string token) {
 
 int check_token(string email, string token) {
 
-	HttpConnect* p = new HttpConnect(9091);
-	string res = p->postData(SERVER_IP, "/api/check_token/", "email=" + email + "&token=" + token);
+	HttpConnect* p = new HttpConnect(WEB_SERVER_PORT);
+	string res = p->postData(WEB_SERVER_IP, "/api/check_token/", "email=" + email + "&token=" + token);
+	if (res.empty()) {
+		return -1;
+	}
 	res = res.substr(res.find("\r\n\r\n") + 4);
 	int ret = atoi(res.c_str());
 	return ret;

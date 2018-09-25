@@ -14,7 +14,7 @@ class MyExplorer: public QWidget
 	Q_OBJECT
 
 public:
-	MyExplorer(QWidget* parent = 0);
+	MyExplorer(QWidget* parent = 0, string path="/");
 	~MyExplorer();
 	
 	//根据path获取当前路径的文件，存放在fileList里
@@ -22,6 +22,7 @@ public:
 	void clearHistory();
 	virtual string getDirPath();
 	virtual string getFilePath();
+	virtual bool validPath() = 0;
 
 signals:
 	//void createUploadTask(string, string);

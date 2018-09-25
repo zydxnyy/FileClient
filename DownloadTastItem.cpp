@@ -108,13 +108,6 @@ void DownloadTastItem::task() {
 			}
 	} };
 	monitor.detach();
-	//if (UDT::ERROR == UDT::sendfile(fhandle, ifs, offset, filesize)) {
-	//	UDT::close(fhandle);
-	//	ifs.close();
-	//	qDebug() << "sendfile: " << UDT::getlasterror().getErrorMessage() << endl;
-	//	emit complete(1);
-	//	return -1;
-	//}
 	char buffer[CHUNK_SIZE];
 	ofs.seekp(offset, ios::beg);
 	size_t remainSize = filesize - offset;
@@ -175,10 +168,18 @@ void DownloadTastItem::task() {
 		//qDebug() << "Remain = " << remainSize << " send = " << ret << endl;
 		
 	}
-
+	
 	ofs.close();
 	UDT::close(fhandle);
 	rename(string(name + ".ft.nc").c_str(), name.c_str());
+
+	//校验下载文件
+	if (hashFile((path + filename).c_str()) != string(rpy.fileHash)) {
+		qDebug() << "FileHash: failed to hash file" << hashFile((path + filename).c_str()).c_str() << string(rpy.fileHash).c_str();
+		emit complete(FILE_HASH_FAULT);
+		return;
+	}
+
 	// use this function to release the UDT library
 	emit update_pb(100);
 	emit complete(MY_NO_ERROR);

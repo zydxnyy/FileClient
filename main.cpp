@@ -23,8 +23,10 @@
 
 int main(int argc, char *argv[])
 {
+
 	QApplication a(argc, argv);
 	qRegisterMetaType<size_t>("size_t");
+	qRegisterMetaType<Py_Ret>("Py_Ret");
 	UDT::startup();
 
 	Login login;

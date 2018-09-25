@@ -14,6 +14,7 @@ class LocalExplorer: public MyExplorer
 public:
 	LocalExplorer(QWidget* parent = 0);
 	~LocalExplorer();
+	virtual bool validPath();
 
 	virtual void getFileList();
 
