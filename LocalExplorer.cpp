@@ -39,7 +39,7 @@ void LocalExplorer::getFileList()
 	QDir* dir = new QDir();
 	dir->cd(path.c_str());
 	dir->setFilter(QDir::NoDotAndDotDot | QDir::AllEntries | QDir::Drives);
-	dir->setSorting(QDir::DirsFirst | QDir::Name);
+	dir->setSorting(QDir::DirsFirst | QDir::Name | QDir::Time);
 	QFileInfoList list = dir->entryInfoList();
 	for (int i = 0; i < list.size(); ++i) {
 		if (hasSuffix(list[i].fileName().toStdString(), ".ft.nc")) continue;
