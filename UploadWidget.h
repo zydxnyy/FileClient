@@ -4,6 +4,7 @@
 #include "ui_UploadWidget.h"
 #include "LocalExplorer.h"
 #include "RemoteExplorer.h"
+#include "DspyTaskItem.h"
 #include "util.h"
 #pragma execution_character_set("utf-8")
 
@@ -11,14 +12,14 @@ class UploadWidget: public QWidget
 {
 	Q_OBJECT
 public:
-	UploadWidget(Proj_Container* pProjects, QWidget* parent = 0);
+	UploadWidget(Proj_Container* proteinProjects, Proj_Container* drugProjects, Proj_Container* animalProjects, QWidget* parent = 0);
 	~UploadWidget();
 
 signals:
-	void addUploadTask(const string& path, const string& projName);
-	void addDownloadTask(const string& projname, const string& filename, const string& localpath);
+	void addUploadTask(const string& path, const int& typeId, const string& projName, DspyTaskItem*);
+	void addDownloadTask(const int& type, const string& projname, const string& filename, const string& localpath, DspyTaskItem*);
 	void appendHistory(QString&);
-	void takeFile(string, string);
+	void takeFile(string, string, string);
 
 public slots:
 	void uploadSlot();
@@ -32,12 +33,16 @@ public slots:
 
 	void refreshDir();
 
-	void takeFileSlot(string, string);
+	void takeFileSlot(string, string, string);
+	void doneSlots(QListWidgetItem*);
 
 private:
 	Ui::UploadWidget ui;
 	LocalExplorer* localExplorer;
 	RemoteExplorer* remoteExplorer;
-	Proj_Container* pProjects;
+	Proj_Container* proteinProjects;
+	Proj_Container* drugProjects;
+	Proj_Container* animalProjects;
+	QListWidget* listWidget;
 };
 

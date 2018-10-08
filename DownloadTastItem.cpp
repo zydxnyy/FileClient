@@ -1,8 +1,8 @@
 #include "DownloadTastItem.h"
 
 
-DownloadTastItem::DownloadTastItem(const string& path, const string& projName, const string& filename, size_t filesize, QListWidgetItem* p, QWidget* parent)
-	:TaskItem(DOWNLOAD, filename, filesize, p, path, projName, parent)
+DownloadTastItem::DownloadTastItem(const string& path, int typeId, const string& projName, const string& filename, size_t filesize, QListWidgetItem* p, QWidget* parent)
+	:TaskItem(DOWNLOAD, filename, filesize, p, path, typeId, projName, parent)
 {
 	start();
 }
@@ -22,11 +22,13 @@ void DownloadTastItem::task() {
 	if (fs > 0) {
 		//为同一文件
 		if (fs == filesize) {
+			qDebug() << "FILE_EXISTS";
 			emit complete(FILE_EXISTS);
 			return;
 		}
 		//不同名
 		else {
+			qDebug() << "FILE_NAME_DULPLICTAION";
 			emit complete(FILE_NAME_DULPLICTAION);
 			return;
 		}
@@ -64,8 +66,9 @@ void DownloadTastItem::task() {
 		return;
 	}
 	freeaddrinfo(peer);
-	qDebug() << filename.c_str() << " " << filesize << endl;
-	FileRequest msg((char)DOWNLOAD, my_email.c_str(), my_token.c_str(), projectName.c_str(), filename.c_str(), filesize, 0, fs);
+	qDebug() << filename.c_str() << " " << filesize << typeId <<  TYPE[typeId].c_str()<< endl;
+	//char op, const char* email, const char* token, const char* type, const char* project_name, const char* file_name, size_t file_size, const char* fileHash = 0, size_t offset = 0)
+	FileRequest msg((char)DOWNLOAD, my_email.c_str(), my_token.c_str(), TYPE[typeId].c_str(), projectName.c_str(), filename.c_str(), filesize, nullptr, fs);
 	if (UDT::ERROR == UDT::send(fhandle, (char*)&msg, sizeof(msg), 0)) {
 		qDebug() << "send msg: " << UDT::getlasterror().getErrorMessage() << endl;
 		emit complete(SEND_REQ_FAILED);

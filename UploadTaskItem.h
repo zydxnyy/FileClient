@@ -15,7 +15,7 @@ class UploadTaskItem :
 	public TaskItem
 {
 public:
-	UploadTaskItem(const string& path, const string& projName, QListWidgetItem* p, QWidget* parent = 0);
+	UploadTaskItem(const string& path, int typeId, const string& projName, QListWidgetItem* p, QWidget* parent = 0);
 	~UploadTaskItem();
 
 	virtual void task();

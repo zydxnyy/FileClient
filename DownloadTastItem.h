@@ -15,7 +15,7 @@ class DownloadTastItem:public TaskItem
 {
 public:
 	~DownloadTastItem();
-	DownloadTastItem(const string& path, const string& projName, const string& filename, size_t filesize, QListWidgetItem* p, QWidget* parent = 0);
+	DownloadTastItem(const string& path, int typeId, const string& projName, const string& filename, size_t filesize, QListWidgetItem* p, QWidget* parent = 0);
 
 	virtual void task();
 

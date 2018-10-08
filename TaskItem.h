@@ -13,7 +13,7 @@ class TaskItem :public QWidget
 {
 	Q_OBJECT
 public:
-	TaskItem(OP_TYPE op, const string& filename, size_t filesize, QListWidgetItem* p, const string& path, const string& projName, QWidget* parent = 0);
+	TaskItem(OP_TYPE op, const string& filename, size_t filesize, QListWidgetItem* p, const string& path, int typeId, const string& projName, QWidget* parent = 0);
 	~TaskItem();
 
 	void start();
@@ -41,6 +41,7 @@ public:
 	string getProjectName() { return projectName; }
 	size_t getFilesize() { return filesize; }
 	string getFileHash() { return fileHash; }
+	int getType() { return typeId; }
 protected:
 	//ÉÏ´«/ÏÂÔØroutine
 	virtual void task() = 0;
@@ -55,6 +56,7 @@ protected:
 	QListWidgetItem* pWidgetItem;
 
 	string projectName;
+	int typeId;
 	string path;
 
 	string fileHash;

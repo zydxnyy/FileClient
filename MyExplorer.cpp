@@ -92,9 +92,10 @@ void MyExplorer::updateFileList()
 	ui.listWidget->clear();
 	getFileList();
 	for (int i = 0; i < fileList.size(); ++i) {
-		int row = i / 4, col = i % 4;
-
-		QListWidgetItem* pNewItem = new QListWidgetItem(QString::fromStdString(fileList[i].filename));
+		string name;
+		if (fileList[i].extra == 1 && fileList[i].isDir) name = fileList[i].filename + "*";
+		else name = fileList[i].filename;
+		QListWidgetItem* pNewItem = new QListWidgetItem(QString::fromStdString(name));
 		pNewItem->setIcon(QIcon(setFileIcon(fileList[i])));
 		ui.listWidget->addItem(pNewItem);
 	}

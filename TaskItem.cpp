@@ -1,7 +1,7 @@
 #include "TaskItem.h"
 
-TaskItem::TaskItem(OP_TYPE op, const string& filename, size_t filesize, QListWidgetItem* p, const string& path, const string& projName, QWidget* parent):
-	QWidget(parent), op(op), filename(filename), filesize(filesize), pause(false), stop(false), start_time(time(NULL)), pWidgetItem(p), path(path), projectName(projName)
+TaskItem::TaskItem(OP_TYPE op, const string& filename, size_t filesize, QListWidgetItem* p, const string& path, int typeId, const string& projName, QWidget* parent):
+	QWidget(parent), op(op), filename(filename), filesize(filesize), pause(false), stop(false), start_time(time(NULL)), pWidgetItem(p), path(path),typeId(typeId), projectName(projName)
 {
 
 	ui.setupUi(this);

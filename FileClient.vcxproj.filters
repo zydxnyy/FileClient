@@ -82,6 +82,9 @@
     <ClCompile Include="md5.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DspyTaskItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="FileClient.h">
@@ -117,6 +120,9 @@
     <QtMoc Include="FileProp.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="DspyTaskItem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="FileClient.ui">
@@ -141,6 +147,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="FileProperty.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="DspyTaskItem.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

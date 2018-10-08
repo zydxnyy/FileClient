@@ -3,10 +3,9 @@
 #include <qmenu.h>
 #include "FileProp.h"
 
-RemoteExplorer::RemoteExplorer(Proj_Container* pProj, QWidget* parent):
-	MyExplorer(parent)
+RemoteExplorer::RemoteExplorer(Proj_Container* proteinProjects, Proj_Container* drugProjects, Proj_Container* animalProjects, QWidget* parent):
+	MyExplorer(parent), proteinProjects(proteinProjects), drugProjects(drugProjects), animalProjects(animalProjects)
 {
-	pProjects = pProj;
 	updateFileList();
 	connect(ui.listWidget, SIGNAL(acceptFileName(QString)), this, SLOT(acceptFileName(QString)));
 	connect(ui.listWidget, SIGNAL(acceptUrl(QUrl)), this, SLOT(acceptUrl(QUrl)));
@@ -18,32 +17,35 @@ RemoteExplorer::~RemoteExplorer()
 }
 
 bool RemoteExplorer::validPath() {
+	string p = ui.pathEdit->text().toStdString();
 	int slashCnt = 0;
 	string type, projectname;
 	int slashPos = -1;
-	for (int i = 0; i < path.size(); ++i) {
-		if (path.at(i) == '/') ++slashCnt;
+	for (int i = 0; i < p.size(); ++i) {
+		if (p.at(i) == '/') ++slashCnt;
 	}
 	switch (slashCnt) {
 	case 1:
 		/* 根目录 */
-		if (path.size() != 1) return false;
+		if (p.size() != 1) return false;
 		return true;
 	case 2:
-		if (path.front() != '/' || path.back() != '/') return false;
-		type = path.substr(1, path.size() - 2);
+		if (p.front() != '/' || p.back() != '/') return false;
+		type = p.substr(1, p.size() - 2);
 		//不属于三类
 		if (type != TYPE[0] && type != TYPE[1] && type != TYPE[2]) return false;
 		return true;
 	case 3:
-		if (path.front() != '/' || path.back() != '/') return false;
-		slashPos = path.find('/', 1);
-		type = path.substr(1, slashPos - 1);
-		projectname = path.substr(slashPos + 1, path.size() - slashPos - 2);
-		//不属于三类
-		if (type != TYPE[0] && type != TYPE[1] && type != TYPE[2]) return false;
+		if (p.front() != '/' || p.back() != '/') return false;
+		slashPos = p.find('/', 1);
+		type = p.substr(1, slashPos - 1);
+		projectname = p.substr(slashPos + 1, p.size() - slashPos - 2);
+		if (type == TYPE[0]) projects = proteinProjects;
+		else if (type == TYPE[1]) projects = drugProjects;
+		else if (type == TYPE[2]) projects = animalProjects;
+		else return false;
 		//没有找到项目名
-		for (int i = 0; i < pProjects->size(); ++i) if (projectname == pProjects->at(i)->name) return true;
+		for (int i = 0; i < projects->size(); ++i) if (projectname == projects->at(i)->name) return true;
 		return false;
 	default:
 		return false;
@@ -52,56 +54,65 @@ bool RemoteExplorer::validPath() {
 
 void RemoteExplorer::getFileList()
 {
-	int slashPos = path.find('/', 1);
-	//根目录，显示所有的project
-	if (slashPos == -1) {
-		for (int i = 0; i < pProjects->size(); ++i) {
-			string projname = pProjects->at(i)->name;
+	int slashCnt = 0;
+	int typeId;
+	string type, projname;
+	int slashPos = -1;
+	for (int i = 0; i < path.size(); ++i) {
+		if (path.at(i) == '/') ++slashCnt;
+	}
+	//根目录，显示所有的种类
+	if (slashCnt == 1) {
+		for (int i = 0; i < 3; ++i) {
+			type = TYPE[i];
 			int filesize = 0;
 			bool isDir = true;
-			if (my_uid == pProjects->at(i)->uid) projname += "*";
-			fileList.push_back(MyFile(isDir, "", projname, filesize, 0, "*", "/"+projname+"/", "*"));
+			fileList.push_back(MyFile(isDir, NO_TYPE, "", type, filesize, 0, "*", "/" + type + "/", "*"));
 		}
 	}
+	//二级目录，显示type类型下所有的project
+	else if (slashCnt == 2) {
+		type = path.substr(1, path.size() - 2);
+		if (type == TYPE[0]) { projects = proteinProjects; typeId = PROTEIN; }
+		else if (type == TYPE[1]) { projects = drugProjects; typeId = DRUG; }
+		else if (type == TYPE[2]) { projects = animalProjects; typeId = ANIMAL; }
+		else return;
+		for (int i = 0; i < projects->size(); ++i) {
+			string projname = projects->at(i)->name;
+			int filesize = 0;
+			bool isDir = true;
+			MyFile f(isDir, typeId, "", projname, filesize, 0, "*", "/" + projname + "/", "*");
+			if (my_uid == projects->at(i)->uid) f.extra = 1;
+			fileList.push_back(f);
+		}
+	}
+	//三级目录，显示project里的文件
 	else {
-		string projname = path.substr(1, slashPos-1);
-		if (projname[projname.size() - 1] == '*') projname = projname.substr(0, projname.size() - 1);
-		for (int i = 0; i < pProjects->size(); ++i) {
-			if (projname != pProjects->at(i)->name) continue;
+		slashPos = path.find('/', 1);
+		type = path.substr(1, slashPos - 1);
+		projname = path.substr(slashPos + 1, path.size() - 2 - slashPos);
+		if (type == TYPE[0]) { projects = proteinProjects; typeId = PROTEIN; }
+		else if (type == TYPE[1]) { projects = drugProjects; typeId = DRUG; }
+		else if (type == TYPE[2]) { projects = animalProjects; typeId = ANIMAL; }
+		else return;
+		qDebug() << "Type=" << type.c_str() << "projname=" << projname.c_str();
+		for (int i = 0; i < projects->size(); ++i) {
+			if (projname != projects->at(i)->name) continue;
 
-			for (int j = 0; j < pProjects->at(i)->files.size(); ++j) {
+			for (int j = 0; j < projects->at(i)->files.size(); ++j) {
 				bool isDir = false;
-				string projname = pProjects->at(i)->files[j].projname;
-				string filename = pProjects->at(i)->files[j].filename;
-				int filesize = pProjects->at(i)->files[j].filesize;
-				time_t created = pProjects->at(i)->files[j].uploadtime;
-				string email = pProjects->at(i)->files[j].email;
-				string path = pProjects->at(i)->files[j].path;
-				string fileHash = pProjects->at(i)->files[j].fileHash;
-				fileList.push_back(MyFile(false, projname, filename, filesize, created, email, path, fileHash));
+				string projname = projects->at(i)->files[j].projname;
+				string filename = projects->at(i)->files[j].filename;
+				int filesize = projects->at(i)->files[j].filesize;
+				time_t created = projects->at(i)->files[j].uploadtime;
+				string email = projects->at(i)->files[j].email;
+				string path = projects->at(i)->files[j].path;
+				string fileHash = projects->at(i)->files[j].fileHash;
+				fileList.push_back(MyFile(false, typeId, projname, filename, filesize, created, email, path, fileHash));
 			}
+			break;
 		}
 	}
-}
-
-Proj * RemoteExplorer::getProject()
-{
-	int slashPos = path.find('/', 1);
-	if (slashPos == -1) {
-		return NULL;
-	}
-	else {
-		string projname = path.substr(1, slashPos - 1);
-		if (projname[projname.size() - 1] == '*') projname = projname.substr(0, projname.size() - 1);
-		for (int i = 0; i < pProjects->size(); ++i) {
-			if (projname != pProjects->at(i)->name) continue;
-
-			for (int j = 0; j < pProjects->at(i)->files.size(); ++j) {
-
-			}
-		}
-	}
-	return nullptr;
 }
 
 void RemoteExplorer::acceptFileName(QString filename) {
@@ -140,16 +151,50 @@ void RemoteExplorer::menu(QPoint point) {
 
 void RemoteExplorer::delFile(bool)
 {
-	string remotePath = getDirPath();
+
+	int slashCnt = 0;
+	int typeId;
+	string type, projname;
+	Proj* cur = NULL;
+	int slashPos = -1;
+	for (int i = 0; i < path.size(); ++i) {
+		if (path.at(i) == '/') ++slashCnt;
+	}
+	//只有在项目文件夹下才能删除文件
+	if (slashCnt != 3) {
+		QMessageBox::warning(this, "没有权限", "您没有这个目录的删除权限", QMessageBox::Yes);
+		return;
+	}
 	string filename = item->text().toStdString();
-	if (remotePath.size() < 2 || remotePath.at(remotePath.size() - 2) != '*') {
+	slashPos = path.find('/', 1);
+	type = path.substr(1, slashPos - 1);
+	projname = path.substr(slashPos + 1, path.size() - 2 - slashPos);
+	if (type == TYPE[0]) { projects = proteinProjects; typeId = PROTEIN; }
+	else if (type == TYPE[1]) { projects = drugProjects; typeId = DRUG; }
+	else if (type == TYPE[2]) { projects = animalProjects; typeId = ANIMAL; }
+	else return;
+
+	int sel = -1;
+	for (int i = 0; i < projects->size(); ++i) {
+		if (projname == projects->at(i)->name) {
+			cur = projects->at(i);
+			for (int j = 0; j < projects->at(i)->files.size(); ++j) {
+				if (projects->at(i)->files.at(j).filename == filename) {
+					sel = j;
+					break;
+				}
+			}
+			break;
+		}
+	}
+
+	if (cur->files.at(sel).extra!=1) {
 		QMessageBox::warning(this, "没有权限", "您没有这个目录的删除权限", QMessageBox::Yes);
 		return;
 	}
 	if (QMessageBox::warning(this, "警告", QString("即将删除 %1 ").arg(item->text()), QMessageBox::Yes | QMessageBox::No) == QMessageBox::No) return;
-	string projname = remotePath.substr(1, remotePath.size() - 3);
 	struct addrinfo hints, *peer, *local;
-	qDebug() << "DEL" << remotePath.c_str() << filename.c_str() << projname.c_str();
+	qDebug() << "DEL" << path.c_str() << filename.c_str() << projname.c_str();
 
 	memset(&hints, 0, sizeof(struct addrinfo));
 	hints.ai_flags = AI_PASSIVE;
@@ -171,7 +216,7 @@ void RemoteExplorer::delFile(bool)
 		return;
 	}
 	//FileRequest(char op, const char* email, const char* token, const char* project_name, const char* file_name, size_t file_size, size_t offset = 0)
-	FileRequest msg((char)DEL, my_email.c_str(), my_token.c_str(), projname.c_str(), filename.c_str(), 0);
+	FileRequest msg((char)DEL, my_email.c_str(), my_token.c_str(), TYPE[typeId].c_str(), projname.c_str(), filename.c_str(), 0);
 	if (UDT::ERROR == UDT::send(fhandle, (char*)&msg, sizeof(msg), 0)) {
 		qDebug() << "send: " << UDT::getlasterror().getErrorMessage() << endl;
 		return;
@@ -183,7 +228,7 @@ void RemoteExplorer::delFile(bool)
 	}
 	if (rpy.error_flag == MY_NO_ERROR) {
 		qDebug() << "Delete successfully";
-		emit takeFile(projname, filename);
+		emit takeFile(type, projname, filename);
 	}
 	else {
 		qDebug() << "DEL failed :" <<  rpy.extra << endl;

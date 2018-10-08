@@ -30,7 +30,7 @@ void LocalExplorer::getFileList()
 	if (path.empty()) {
 		QFileInfoList list = drives->drives();
 		for (int i = 0; i < list.size(); ++i) {
-			fileList.push_back(MyFile(list[i].isDir(), "", list[i].fileName().toStdString(), list[i].size(), list[i].created().toTime_t(), "*", list[i].absoluteFilePath().toStdString(), "*", true));
+			fileList.push_back(MyFile(list[i].isDir(), NO_TYPE, "", list[i].filePath().mid(0, list[i].filePath().size()-1).toStdString(), list[i].size(), list[i].created().toTime_t(), "*", list[i].absoluteFilePath().toStdString(), "*", true));
 		}
 		return;
 	}
@@ -43,8 +43,8 @@ void LocalExplorer::getFileList()
 	QFileInfoList list = dir->entryInfoList();
 	for (int i = 0; i < list.size(); ++i) {
 		if (hasSuffix(list[i].fileName().toStdString(), ".ft.nc")) continue;
-		if(list[i].isDir()) fileList.push_back(MyFile(list[i].isDir(), "", list[i].fileName().toStdString(), list[i].size(), list[i].created().toTime_t(), "*", list[i].absoluteFilePath().toStdString(), "*"));
-		else  fileList.push_back(MyFile(list[i].isDir(), "", list[i].fileName().toStdString(), list[i].size(), list[i].created().toTime_t(), "*", list[i].absoluteFilePath().toStdString(), ""));
+		if(list[i].isDir()) fileList.push_back(MyFile(list[i].isDir(), NO_TYPE, "*", list[i].fileName().toStdString(), list[i].size(), list[i].created().toTime_t(), "*", list[i].absoluteFilePath().toStdString(), "*"));
+		else  fileList.push_back(MyFile(list[i].isDir(), NO_TYPE, "*", list[i].fileName().toStdString(), list[i].size(), list[i].created().toTime_t(), "*", list[i].absoluteFilePath().toStdString(), ""));
 	}
 }
 

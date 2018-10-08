@@ -13,14 +13,20 @@ const string WEB_SERVER_PORT = setting->value("WEB_SERVER_PORT", "9091").toStrin
 const string FILE_SERVER_IP = setting->value("FILE_SERVER_IP", "10.132.100.180").toString().toStdString();
 const string FILE_SERVER_PORT = setting->value("FILE_SERVER_PORT", "5566").toString().toStdString();
 
-string ERROR_STR[] = {
+
+//const string WEB_SERVER_IP = setting->value("WEB_SERVER_IP", "192.168.135.131").toString().toStdString();
+//const string WEB_SERVER_PORT = setting->value("WEB_SERVER_PORT", "9091").toString().toStdString();;
+//const string FILE_SERVER_IP = setting->value("FILE_SERVER_IP", "192.168.135.131").toString().toStdString();
+//const string FILE_SERVER_PORT = setting->value("FILE_SERVER_PORT", "5566").toString().toStdString();
+
+const string ERROR_STR[] = {
 	"NO_ERROR",
 	"ERROR",
 	"用户登录已过期，请重新验证",
 	"文件已经存在",
 	"文件不存在",
 	"服务器内部错误",
-	"文件名重复，请修改文件名后再上传",
+	"文件名重复",
 	"打开文件失败",
 	"服务器地址错误",
 	"服务器连接失败",
@@ -34,9 +40,11 @@ string ERROR_STR[] = {
 	"文件校验失败",
 };
 
+const string TYPE[] = { "Protein", "Drug", "Animal" };
+
 string browse_file()
 {
-	QString fileName = QFileDialog::getOpenFileName(NULL, "Open Image", ".", "All Files(*.*)");
+	QString fileName = QFileDialog::getOpenFileName(NULL, "Open file", ".", "All Files(*.*)");
 	QTextCodec *code = QTextCodec::codecForName("GB2312");//解决中文路径问题
 	std::string name = code->fromUnicode(fileName).data();
 
@@ -86,7 +94,7 @@ Py_Ret get_all_project(const string& email, const string& token) {
 	}
 	freeaddrinfo(peer);
 
-	FileRequest msg((char)GETDIR, my_email.c_str(), my_token.c_str(), "", "", 0);
+	FileRequest msg((char)GETDIR, my_email.c_str(), my_token.c_str(), "", "", "", 0);
 	if (UDT::ERROR == UDT::send(fhandle, (char*)&msg, sizeof(msg), 0))
 	{
 		qDebug() << "send: " << UDT::getlasterror().getErrorMessage() << endl;

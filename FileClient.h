@@ -24,9 +24,9 @@ class FileClient : public QMainWindow
 public:
 	FileClient(QWidget *parent = Q_NULLPTR);
 public slots:
-	void updateFileDir(QString&, MyFile*);
+	void updateFileDir(string type, QString&, MyFile*);
 	int get_projects();
-	void takeFile(string, string);
+	void takeFile(string, string, string);
 
 	//Ë¢ÐÂÄ¿Â¼
 	void refresh();
@@ -38,8 +38,9 @@ public slots:
 	void exitExe();
 private:
 	Ui::FileClientClass ui;
-	Proj_Container projects;
-	Proj_Container self_projects;
+	Proj_Container proteinProjects;
+	Proj_Container drugProjects;
+	Proj_Container animalProjects;
 	UploadWidget* uploadWidget;
 	TaskWidget* taskWidget;
 	HistoryWidget* historyWidget;

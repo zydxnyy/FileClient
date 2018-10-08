@@ -30,10 +30,6 @@ Login::~Login()
 
 int Login::login_slot()
 {
-	///
-	accept();
-	///
-
 	ui.loadingLabel->show();
 	this->setDisabled(true);
 

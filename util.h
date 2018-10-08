@@ -21,7 +21,7 @@ using namespace std;
 #pragma execution_character_set("utf-8")
 
 #define SERVER_IP "10.132.100.180"
-//#define SERVER_IP "172.18.94.114"
+//#define SERVER_IP "192.168.135.131"
 #define SERVER_PORT "5566"
 
 #define getIconByIndex(index) QApplication::style()->standardIcon((enum QStyle::StandardPixmap)index)
@@ -58,7 +58,15 @@ enum FILE_TRANS_ERROR {
 	FILE_HASH_FAULT,
 };
 
-string ERROR_STR[];
+enum PROJ_TYPE {
+	NO_TYPE = -1,
+	PROTEIN = 0,
+	DRUG,
+	ANIMAL,
+};
+
+extern const string ERROR_STR[];
+extern const string TYPE[];
 
 #define File_Container vector<MyFile>
 #define Proj_Container vector<Proj*>
@@ -86,6 +94,7 @@ struct Py_Ret {
 
 struct MyFile {
 	bool isDir;
+	int typeId;
 	string projname;
 	string filename;
 	size_t filesize;
@@ -94,9 +103,13 @@ struct MyFile {
 	string path;
 	string fileHash;
 	bool isDrive;
-	MyFile(bool isDir, const string& projname, const string& filename, size_t filesize, time_t uploadtime, string email, string path, string fileHash, bool isDrive=false)
-		: isDir(isDir), projname(projname), filename(filename), filesize(filesize), uploadtime(uploadtime), email(email), path(path), fileHash(fileHash), isDrive(isDrive) {
+	int extra;
+	MyFile(bool isDir, int typeId, const string& projname, const string& filename, size_t filesize, time_t uploadtime, string email, string path, string fileHash, bool isDrive=false)
+		: isDir(isDir), typeId(typeId), projname(projname), filename(filename), filesize(filesize), uploadtime(uploadtime), email(email), 
+		path(path), fileHash(fileHash), isDrive(isDrive) {
 		//qDebug() << path.c_str() << "New Hash = " << fileHash.c_str();
+		extra = 0;
+		if (my_email == email) extra = 1;
 	}
 
 	MyFile() {}
@@ -111,6 +124,8 @@ struct MyFile {
 		path = ano.path;
 		fileHash = ano.fileHash;
 		isDrive = ano.isDrive;
+		typeId = ano.typeId;
+		extra = ano.extra;
 	}
 
 	bool valid() {
@@ -128,25 +143,27 @@ struct FileRequest {
 	char op;
 	char email[50];
 	char token[50];
+	char type[50];
 	char project_name[50];
 	char file_name[50];
 	size_t file_size;
 	size_t offset;
 	char fileHash[130];
 	FileRequest() {
-		ZERO(this->email); ZERO(this->token); ZERO(this->project_name); ZERO(this->file_name);
+		ZERO(this->email); ZERO(this->token); ZERO(this->project_name); ZERO(this->file_name); ZERO(this->type);
 	}
-	FileRequest(char op, const char* email, const char* token, const char* project_name, const char* file_name, size_t file_size,const char* fileHash = 0, size_t offset = 0) {
+	FileRequest(char op, const char* email, const char* token, const char* type, const char* project_name, const char* file_name, size_t file_size, const char* fileHash = nullptr, size_t offset = 0) {
 		this->op = op;
 		this->file_size = file_size;
 		this->offset = offset;
 		memset((char*)this->fileHash, 0, sizeof(this->fileHash));
-		if (fileHash != NULL) memcpy(this->fileHash, fileHash, strlen(fileHash));
-		ZERO(this->email); ZERO(this->token); ZERO(this->project_name); ZERO(this->file_name);
+		ZERO(this->email); ZERO(this->token); ZERO(this->project_name); ZERO(this->file_name); ZERO(this->type); ZERO(this->fileHash);
 		memcpy(this->email, email, strlen(email));
 		memcpy(this->token, token, strlen(token));
+		memcpy(this->type, type, strlen(type));
 		memcpy(this->project_name, project_name, strlen(project_name));
 		memcpy(this->file_name, file_name, strlen(file_name));
+		if (fileHash != nullptr) memcpy(this->fileHash, fileHash, strlen(fileHash));
 	}
 };
 
@@ -162,6 +179,7 @@ struct FileReply {
 struct Proj {
 	string name;
 	int uid;
+	int typeId;
 	File_Container files;
 };
 

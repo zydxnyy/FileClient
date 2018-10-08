@@ -1,7 +1,7 @@
 #include "UploadTaskItem.h"
 
-UploadTaskItem::UploadTaskItem(const string& path, const string& projName, QListWidgetItem* p, QWidget* parent) :
-	TaskItem(UPLOAD, get_file_name(path), get_file_size(path), p, path, projName, parent)
+UploadTaskItem::UploadTaskItem(const string& path, int typeId,const string& projName, QListWidgetItem* p, QWidget* parent) :
+	TaskItem(UPLOAD, get_file_name(path), get_file_size(path), p, path,typeId, projName, parent)
 {
 	start();
 }
@@ -17,6 +17,11 @@ void UploadTaskItem::task()
 	QString pathname = QString::fromStdString(path);
 	QTextCodec *code = QTextCodec::codecForName("GB2312");//解决中文路径问题
 	std::string name = code->fromUnicode(pathname).data(); 
+
+	QString qfilename = QString::fromStdString(filename);
+	code = QTextCodec::codecForName("utf-8");//解决中文路径问题
+	string cnfilename = code->fromUnicode(qfilename).data();
+
 	fstream ifs(name, ios::in | ios::binary);
 	qDebug() << "UploadFIle = " << path.c_str() << endl;
 	if (!ifs) {
@@ -49,7 +54,7 @@ void UploadTaskItem::task()
 	}
 	freeaddrinfo(peer);
 	qDebug() << filename.c_str() << " " << filesize << " " << fileHash.c_str() << endl;
-	FileRequest msg((char)UPLOAD, my_email.c_str(), my_token.c_str(), projectName.c_str(), filename.c_str(), filesize, fileHash.c_str());
+	FileRequest msg((char)UPLOAD, my_email.c_str(), my_token.c_str(), TYPE[typeId].c_str(), projectName.c_str(), cnfilename.c_str(), filesize, fileHash.c_str());
 	if (UDT::ERROR == UDT::send(fhandle, (char*)&msg, sizeof(msg), 0)) {
 		qDebug() << "send msg: " << UDT::getlasterror().getErrorMessage() << endl;
 		emit complete(SEND_REQ_FAILED);

@@ -10,14 +10,14 @@ class RemoteExplorer :
 {
 	Q_OBJECT
 public:
-	RemoteExplorer(Proj_Container* pProj, QWidget* parent = 0);
+	RemoteExplorer(Proj_Container* proteinProjects, Proj_Container* drugProjects, Proj_Container* animalProjects, QWidget* parent = 0);
 	~RemoteExplorer();
 	virtual bool validPath();
 
 signals:
 	void dragFileUpload(string);
 	void dragUrlUpload(QUrl);
-	void takeFile(string, string);
+	void takeFile(string, string, string);
 	void menuFileDownload(string);
 
 public slots:
@@ -30,11 +30,11 @@ public slots:
 	void openProperty(bool);
 	 
 	virtual void getFileList();
-	Proj* getProject();
 private:
-	Proj_Container* pProjects;
+	Proj_Container* proteinProjects;
+	Proj_Container* drugProjects;
+	Proj_Container* animalProjects;
+	Proj_Container* projects;
 	QListWidgetItem* item;
-
-	const string TYPE[3] = { "Protein", "P1", "P2" };
 };
 
