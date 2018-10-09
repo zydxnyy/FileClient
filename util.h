@@ -145,7 +145,7 @@ struct FileRequest {
 	char token[50];
 	char type[50];
 	char project_name[50];
-	char file_name[50];
+	char file_name[100];
 	size_t file_size;
 	size_t offset;
 	char fileHash[130];

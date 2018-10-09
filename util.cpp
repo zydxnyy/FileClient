@@ -291,19 +291,26 @@ string hashFile(const char* filename) {
 	std::string name = code->fromUnicode(pathname).data();
 	string s;
 	ifstream ifs(name.c_str(), ios::binary);
+	MD5 m;
 	if (ifs.is_open())
 	{
-		ifs.seekg(0, ios::end);
-		int len = ifs.tellg();
-		ifs.seekg(0, ios::beg);
-		s.resize(len);
-		ifs.read((char*)s.data(), len);
-		ifs.close();
+		const int buffer_size = 8192;
+		char* buffer = new char [buffer_size];
+		while (ifs.read(buffer, buffer_size))
+		{
+			m.update(buffer, buffer_size);
+		}
+		int remain = ifs.gcount();
+		if (remain) {
+			m.update(buffer, remain);
+		}
+		delete[] buffer;
 	}
 	else
 	{
 		qDebug() << "fopen error\n";
 	}
 	//qDebug() << "fileStr: " << s.c_str() << s.size() << endl;
-	return MD5(s).md5();
+	
+	return m.finalize().hexdigest();
 }
