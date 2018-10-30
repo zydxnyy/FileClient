@@ -1,8 +1,9 @@
 #include "FileProp.h"
+#include <thread>
 #include "udt.h"
 
 
-FileProp::FileProp(MyFile file, QDialog* parent):
+FileProp::FileProp(MyFile file, QDialog* parent) :
 	QDialog(parent)
 {
 	ui.setupUi(this);
@@ -25,7 +26,13 @@ FileProp::FileProp(MyFile file, QDialog* parent):
 		//qDebug() << "!!!Hashing " << file.path.c_str();
 	}
 	else {
-		ui.fileHashEdit->setText(QString::fromStdString(hashFile(file.path.c_str())));
+		ui.fileHashEdit->setText("MD5¼ÆËãÖÐ...");
+		// ui.fileHashEdit->setText(QString::fromStdString(hashFile(file.path.c_str())));
+		string filepath = file.path;
+		std::thread t([this, filepath]() {
+			ui.fileHashEdit->setText(QString::fromStdString(hashFile(filepath.c_str())));
+		});
+		t.detach();
 		//qDebug() << "Hashing " << file.path.c_str();
 	}
 }

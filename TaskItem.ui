@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1096</width>
+    <width>1030</width>
     <height>68</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
      <x>60</x>
      <y>30</y>
      <width>391</width>
-     <height>31</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="value">
@@ -47,8 +47,8 @@
     <rect>
      <x>10</x>
      <y>30</y>
-     <width>31</width>
-     <height>31</height>
+     <width>25</width>
+     <height>25</height>
     </rect>
    </property>
    <property name="text">
@@ -58,33 +58,33 @@
   <widget class="QLabel" name="elapsedTimelabel">
    <property name="geometry">
     <rect>
-     <x>670</x>
+     <x>634</x>
      <y>20</y>
      <width>121</width>
      <height>21</height>
     </rect>
    </property>
    <property name="text">
-    <string>elapsed time</string>
+    <string>用时:0:0:0</string>
    </property>
   </widget>
   <widget class="QLabel" name="remainTimeLabel">
    <property name="geometry">
     <rect>
-     <x>830</x>
+     <x>770</x>
      <y>20</y>
      <width>121</width>
      <height>21</height>
     </rect>
    </property>
    <property name="text">
-    <string>remained time</string>
+    <string>剩余时间:-:-:-</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pauseBtn">
    <property name="geometry">
     <rect>
-     <x>990</x>
+     <x>907</x>
      <y>20</y>
      <width>31</width>
      <height>28</height>
@@ -97,7 +97,7 @@
   <widget class="QPushButton" name="stopBtn">
    <property name="geometry">
     <rect>
-     <x>1050</x>
+     <x>967</x>
      <y>20</y>
      <width>31</width>
      <height>28</height>
@@ -110,14 +110,27 @@
   <widget class="QLabel" name="speedLabel">
    <property name="geometry">
     <rect>
-     <x>530</x>
+     <x>494</x>
      <y>20</y>
      <width>141</width>
      <height>21</height>
     </rect>
    </property>
    <property name="text">
-    <string>speed</string>
+    <string>速度:0.00MB/s</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>50</y>
+     <width>1030</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
   </widget>
  </widget>

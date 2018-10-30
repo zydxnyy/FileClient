@@ -4,16 +4,19 @@
 #include "FileProp.h"
 
 RemoteExplorer::RemoteExplorer(Proj_Container* proteinProjects, Proj_Container* drugProjects, Proj_Container* animalProjects, QWidget* parent):
-	MyExplorer(parent), proteinProjects(proteinProjects), drugProjects(drugProjects), animalProjects(animalProjects)
+	MyExplorer(parent), proteinProjects(proteinProjects), drugProjects(drugProjects), animalProjects(animalProjects), setting("win.ini", QSettings::IniFormat)
 {
 	updateFileList();
 	connect(ui.listWidget, SIGNAL(acceptFileName(QString)), this, SLOT(acceptFileName(QString)));
 	connect(ui.listWidget, SIGNAL(acceptUrl(QUrl)), this, SLOT(acceptUrl(QUrl)));
+	ui.pathEdit->setText(setting.value("remotePath", "C:/").toString());
+	enterPress();
 }
 
 
 RemoteExplorer::~RemoteExplorer()
 {
+	setting.setValue("remotePath", QString(path.c_str()));
 }
 
 bool RemoteExplorer::validPath() {
@@ -231,6 +234,7 @@ void RemoteExplorer::delFile(bool)
 		emit takeFile(type, projname, filename);
 	}
 	else {
+		QMessageBox::warning(this, "", "É¾³ýÊ§°Ü\n" + QString(rpy.extra), QMessageBox::Yes);
 		qDebug() << "DEL failed :" <<  rpy.extra << endl;
 	}
 }

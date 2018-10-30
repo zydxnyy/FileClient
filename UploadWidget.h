@@ -43,6 +43,5 @@ private:
 	Proj_Container* proteinProjects;
 	Proj_Container* drugProjects;
 	Proj_Container* animalProjects;
-	QListWidget* listWidget;
 };
 

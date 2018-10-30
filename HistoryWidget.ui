@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1190</width>
-    <height>750</height>
+    <width>1050</width>
+    <height>680</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,10 +16,10 @@
   <widget class="QTextEdit" name="textEdit">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>20</y>
-     <width>1151</width>
-     <height>700</height>
+     <x>15</x>
+     <y>15</y>
+     <width>1030</width>
+     <height>650</height>
     </rect>
    </property>
    <property name="readOnly">

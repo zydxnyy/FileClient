@@ -30,6 +30,7 @@ void UploadTaskItem::task()
 		return;
 	}
 	struct addrinfo hints, *peer, *local;
+	fileHash = hashFile(path.c_str());
 
 	memset(&hints, 0, sizeof(struct addrinfo));
 	hints.ai_flags = AI_PASSIVE;
@@ -83,9 +84,8 @@ void UploadTaskItem::task()
 	std::thread monitor{ [this, &trace, fhandle, &offset] {
 			int i = 10;
 			while (!stop) {
-				Sleep(100);
 				if (fhandle == INVALID_SOCKET || UDT::perfmon(fhandle, &trace) == UDT::ERROR) break;
-				if (++i >= 10) {
+				if (++i >= 3) {
 					i = 0;
 					int remain_sec = 0;
 					if (trace.mbpsSendRate < 0.0005) remain_sec = -1;
@@ -93,6 +93,7 @@ void UploadTaskItem::task()
 					emit update_speed(trace.mbpsSendRate, remain_sec);
 				}
 				emit update_pb(offset*100 / filesize);
+				Sleep(333);
 			}
 	} };
 	monitor.detach();

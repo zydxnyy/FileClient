@@ -57,21 +57,21 @@ int TaskWidget::doneSlot(TaskItem* taskItem, QListWidgetItem* listItem, int stat
 void TaskWidget::addUploadTask(const string& path, const int& typeId, const string& projName, DspyTaskItem* p) {
 	QListWidgetItem* pItem = new QListWidgetItem(ui.listWidget);
 	pItem->setSizeHint(QSize(-1, 70));
-	ui.listWidget->addItem(pItem);
+	ui.listWidget->insertItem(0, pItem);
 	UploadTaskItem* pNewItem = new UploadTaskItem(path, typeId, projName, pItem, this);
 	ui.listWidget->setItemWidget(pItem, pNewItem);
 	connect(pNewItem, SIGNAL(done(TaskItem*, QListWidgetItem*, int)), this, SLOT(doneSlot(TaskItem*, QListWidgetItem*, int)));
 	connect(pNewItem, SIGNAL(update_pb(int)), p, SLOT(update_pb_slot(int)));
-	connect(pNewItem, SIGNAL(done(TaskItem*, QListWidgetItem*, int)), p, SLOT(complete_slot()));
+	connect(pNewItem, SIGNAL(done(TaskItem*, QListWidgetItem*, int)), p, SLOT(complete_slot(TaskItem*, QListWidgetItem*, int)));
 }
 
 void TaskWidget::addDownloadTask(const int& typeId, const string& projName, const string& filename, const string& path, DspyTaskItem* p) {
 	QListWidgetItem* pItem = new QListWidgetItem(ui.listWidget);
 	pItem->setSizeHint(QSize(-1, 70));
-	ui.listWidget->addItem(pItem);
+	ui.listWidget->insertItem(0, pItem);
 	DownloadTastItem* pNewItem = new DownloadTastItem(path, typeId, projName, filename, 0, pItem, this);
 	ui.listWidget->setItemWidget(pItem, pNewItem);
 	connect(pNewItem, SIGNAL(done(TaskItem*, QListWidgetItem*, int)), this, SLOT(doneSlot(TaskItem*, QListWidgetItem*, int)));
 	connect(pNewItem, SIGNAL(update_pb(int)), p, SLOT(update_pb_slot(int)));
-	connect(pNewItem, SIGNAL(done(TaskItem*, QListWidgetItem*, int)), p, SLOT(complete_slot()));
+	connect(pNewItem, SIGNAL(done(TaskItem*, QListWidgetItem*, int)), p, SLOT(complete_slot(TaskItem*, QListWidgetItem*, int)));
 }

@@ -1,4 +1,5 @@
 #include "FileClient.h"
+#include <qpixmap.h>
 
 FileClient::FileClient(QWidget *parent)
 	: QMainWindow(parent)
@@ -16,14 +17,14 @@ FileClient::FileClient(QWidget *parent)
 	uploadWidget = new UploadWidget(&proteinProjects, &drugProjects, &animalProjects, this);
 	taskWidget = new TaskWidget(this);
 	historyWidget = new HistoryWidget(this);
-	ui.tabWidget->addTab(uploadWidget, QString("浏览"));
-	ui.tabWidget->addTab(taskWidget, QString("任务"));
-	ui.tabWidget->addTab(historyWidget, QString("历史纪录"));
+	ui.tabWidget->addTab(uploadWidget, QIcon("pic/浏览.png"), QString("浏览"));
+	ui.tabWidget->addTab(taskWidget, QIcon("pic/任务.png"), QString("任务"));
+	ui.tabWidget->addTab(historyWidget, QIcon("pic/历史.png"), QString("历史记录"));
 
-	QAction* action1 = new QAction("刷新");
-	QAction* action2 = new QAction("重新验证");
-	QAction* action3 = new QAction("切换用户");
-	QAction* action4 = new QAction("退出");
+	QAction* action1 = new QAction(QIcon("pic/刷新.png"), tr("&刷新..."), this);
+	QAction* action2 = new QAction(QIcon("pic/验证.png"), tr("&重新验证..."), this);
+	QAction* action3 = new QAction(QIcon("pic/切换用户.png"), tr("&切换用户..."), this);
+	QAction* action4 = new QAction(QIcon("pic/退出.png"), tr("&退出..."), this);
 	ui.mainToolBar->addAction(action1);
 	ui.mainToolBar->addAction(action2);
 	ui.mainToolBar->addAction(action3);
@@ -39,13 +40,6 @@ FileClient::FileClient(QWidget *parent)
 	connect(taskWidget, SIGNAL(appendHistory(QString&)), historyWidget, SLOT(appendHistory(QString&)));
 	connect(taskWidget, SIGNAL(updateFileDir(string, QString&, MyFile*)), this, SLOT(updateFileDir(string, QString&, MyFile*)));
 	connect(uploadWidget, SIGNAL(takeFile(string, string, string)), this, SLOT(takeFile(string, string, string)));
-	//for (int i = 0; i < self_projects.size(); ++i) {
-	//	Proj* p = self_projects[i];
-	//	qDebug() << p->name.c_str() << endl;
-	//	for (int j = 0; j < p->files.size(); ++j) {
-	//		qDebug() << p->files[j].name.c_str() << " " << p->files[j].size << endl;
-	//	}
-	//}
 }
 
 int FileClient::get_projects() {
@@ -60,11 +54,10 @@ int FileClient::get_projects() {
 	}
 
 	Py_Ret rtn = get_all_project(email, token);
-		//string result = PyString_AsString(pRet);
 	string& result = rtn.str;
 	int status = rtn.status;
 	if (status!=0) {
-		QMessageBox::warning(NULL, "ALL WARNING", QString(result.c_str()));
+		//QMessageBox::warning(NULL, "ALL WARNING", QString(result.c_str()));
 		return -1;
 	}
 	else {

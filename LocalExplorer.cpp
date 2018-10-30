@@ -2,26 +2,23 @@
 #include <qcombobox.h>
 #include <qdebug.h>
 #include <qmenu.h>
+#include <qsettings.h>
 
-LocalExplorer::LocalExplorer(QWidget* parent) :drive("C:"),
+LocalExplorer::LocalExplorer(QWidget* parent) :drive("C:"), setting("win.ini", QSettings::IniFormat),
 	MyExplorer(parent, "C:/")
 {
 	updateFileList();
-	//box = new QComboBox(this);
-	drives = new QDir();
-	//QFileInfoList list = drives->drives();
-	//for (int i = 0; i < list.size(); ++i) {
-		//box->addItem(QIcon("pic/drive.png"), list[i].filePath());
-	//}
 	connect(ui.listWidget, SIGNAL(acceptFileName(QString)), this, SLOT(acceptFileName(QString)));
 	connect(ui.listWidget, SIGNAL(acceptUrl(QUrl)), this, SLOT(acceptUrl(QUrl)));
-	//box->setGeometry(10, 20, 200, 30);
-	//box->show();
+	ui.pathEdit->setText(setting.value("localPath", "C:/").toString());
+	enterPress();
 }
 
 
 LocalExplorer::~LocalExplorer()
 {
+	setting.setValue("localPath", QString(path.c_str()));
+	qDebug() << path.c_str();
 }
 
 void LocalExplorer::getFileList()

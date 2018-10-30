@@ -8,6 +8,7 @@
 #include <thread>
 #include "util.h"
 #include "ui_Login.h"
+#include <qsettings.h>
 #pragma execution_character_set("utf-8")
 using namespace std;
 
@@ -28,5 +29,6 @@ public slots:
 
 private:
 	Ui::Dialog ui;
+	QSettings setting;
 };
 

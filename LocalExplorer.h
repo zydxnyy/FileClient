@@ -4,6 +4,7 @@
 #include <iostream>
 #include <QDir>
 #include <qmessagebox.h>
+#include <qsettings.h>
 #include "FileProp.h"
 using namespace std;
 #pragma execution_character_set("utf-8")
@@ -43,5 +44,6 @@ private:
 	QComboBox* box;
 	string drive;
 	QListWidgetItem* item;
+	QSettings setting;
 };
 

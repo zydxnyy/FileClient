@@ -1,4 +1,5 @@
 #include "TaskItem.h"
+#include <qmessagebox.h>
 
 TaskItem::TaskItem(OP_TYPE op, const string& filename, size_t filesize, QListWidgetItem* p, const string& path, int typeId, const string& projName, QWidget* parent):
 	QWidget(parent), op(op), filename(filename), filesize(filesize), pause(false), stop(false), start_time(time(NULL)), pWidgetItem(p), path(path),typeId(typeId), projectName(projName)
@@ -20,8 +21,7 @@ TaskItem::TaskItem(OP_TYPE op, const string& filename, size_t filesize, QListWid
 	connect(this, SIGNAL(update_pb(int)), this, SLOT(update_pb_slot(int)));
 	connect(this, SIGNAL(complete(int)), this, SLOT(complete_slot(int)));
 	connect(this, SIGNAL(updateFilesize(size_t)), this, SLOT(updateFilesizeSlot(size_t)));
-
-	fileHash = hashFile(path.c_str());
+	// fileHash = hashFile(path.c_str());
 }
 
 

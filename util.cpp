@@ -7,11 +7,11 @@ string	my_token = "";
 string	my_email = "";
 int		my_uid = -1;
 
-QSettings* setting = new QSettings("win.ini", QSettings::IniFormat);
-const string WEB_SERVER_IP = setting->value("WEB_SERVER_IP", "10.132.100.180").toString().toStdString();
-const string WEB_SERVER_PORT = setting->value("WEB_SERVER_PORT", "9091").toString().toStdString();;
-const string FILE_SERVER_IP = setting->value("FILE_SERVER_IP", "10.132.100.180").toString().toStdString();
-const string FILE_SERVER_PORT = setting->value("FILE_SERVER_PORT", "5566").toString().toStdString();
+QSettings* psetting = new QSettings("win.ini", QSettings::IniFormat);
+const string WEB_SERVER_IP = psetting->value("WEB_SERVER_IP", "114.67.37.2").toString().toStdString();
+const string WEB_SERVER_PORT = psetting->value("WEB_SERVER_PORT", "10422").toString().toStdString();
+const string FILE_SERVER_IP = psetting->value("FILE_SERVER_IP", "114.67.37.2").toString().toStdString();
+const string FILE_SERVER_PORT = psetting->value("FILE_SERVER_PORT", "20574").toString().toStdString();
 
 
 //const string WEB_SERVER_IP = setting->value("WEB_SERVER_IP", "192.168.135.131").toString().toStdString();

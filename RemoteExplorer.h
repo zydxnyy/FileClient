@@ -36,5 +36,6 @@ private:
 	Proj_Container* animalProjects;
 	Proj_Container* projects;
 	QListWidgetItem* item;
+	QSettings setting;
 };
 

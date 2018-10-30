@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <qlistwidget.h>
 #include "ui_DspyTaskItem.h"
+#include "TaskItem.h"
 #pragma execution_character_set("utf-8")
 
 class DspyTaskItem : public QWidget
@@ -17,7 +18,8 @@ signals:
 	int done(QListWidgetItem*);
 public slots:
 	int update_pb_slot(int);
-	int complete_slot();
+	int complete_slot(TaskItem*, QListWidgetItem*, int);
+	int close_slot();
 private:
 	bool isPause;
 	Ui::DspyTaskItemForm ui;

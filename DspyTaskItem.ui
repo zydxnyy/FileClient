@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>639</width>
-    <height>35</height>
+    <width>1031</width>
+    <height>38</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,7 +30,7 @@
    <property name="geometry">
     <rect>
      <x>521</x>
-     <y>4</y>
+     <y>0</y>
      <width>71</width>
      <height>31</height>
     </rect>
@@ -39,11 +39,72 @@
     <string>0%</string>
    </property>
   </widget>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>33</y>
+     <width>1031</width>
+     <height>2</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="noteLabel">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>0</y>
+     <width>100</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="closeBtn">
+   <property name="geometry">
+    <rect>
+     <x>970</x>
+     <y>4</y>
+     <width>25</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>pic/X.png</normaloff>pic/X.png</iconset>
+   </property>
+  </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>closeBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>DspyTaskItemForm</receiver>
+   <slot>close_slot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>978</x>
+     <y>18</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>945</x>
+     <y>15</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <slots>
   <slot>pauseSlot()</slot>
   <slot>stopSlot()</slot>
+  <slot>close_slot()</slot>
  </slots>
 </ui>

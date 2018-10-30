@@ -6,15 +6,13 @@ UploadWidget::UploadWidget(Proj_Container* proteinProjects, Proj_Container* drug
 	ui.setupUi(this);
 	localExplorer = new LocalExplorer(this);
 	remoteExplorer = new RemoteExplorer(proteinProjects, drugProjects, animalProjects, this);
-	localExplorer->setGeometry(0, 0, 530, 540);
-	remoteExplorer->setGeometry(630, 0, 530, 540);
+	localExplorer->setGeometry(0, 0, 490, 500);
+	remoteExplorer->setGeometry(560, 0, 490, 500);
 	localExplorer->show();
 	remoteExplorer->show();
 	
 	ui.uploadBtn->setIcon(QIcon("pic/right.png"));
 	ui.downloadBtn->setIcon(QIcon("pic/left.png"));
-	listWidget = new QListWidget(this);
-	ui.scrollArea->setWidget(listWidget);
 
 	connect(remoteExplorer, SIGNAL(dragFileUpload(string)), this, SLOT(dragFileUploadSlot(string)));
 	connect(remoteExplorer, SIGNAL(dragUrlUpload(QUrl)), this, SLOT(dragUrlUploadSlot(QUrl)));
@@ -108,8 +106,8 @@ void UploadWidget::createUploadTaskSlot(string localPath, string remotePath) {
 	QListWidgetItem* pItem = new QListWidgetItem();
 	pItem->setSizeHint(QSize(700, 40));
 	DspyTaskItem* pDItem = new DspyTaskItem(pItem, filename, this);
-	listWidget->addItem(pItem);
-	listWidget->setItemWidget(pItem, pDItem);
+	ui.listWidget->insertItem(0, pItem);
+	ui.listWidget->setItemWidget(pItem, pDItem);
 	connect(pDItem, SIGNAL(done(QListWidgetItem*)), this, SLOT(doneSlots(QListWidgetItem*)));
 
 	emit addUploadTask(localPath, typeId, projname, pDItem);
@@ -157,8 +155,8 @@ void UploadWidget::createDownloadTaskSlot(string localPath, string remotePath) {
 	QListWidgetItem* pItem = new QListWidgetItem();
 	pItem->setSizeHint(QSize(700, 40));
 	DspyTaskItem* pDItem = new DspyTaskItem(pItem, filename, this);
-	listWidget->addItem(pItem);
-	listWidget->setItemWidget(pItem, pDItem);
+	ui.listWidget->insertItem(0, pItem);
+	ui.listWidget->setItemWidget(pItem, pDItem);
 	connect(pDItem, SIGNAL(done(QListWidgetItem*)), this, SLOT(doneSlots(QListWidgetItem*)));
 
 	qDebug() << projname.c_str() << " " << filename.c_str() << " to " << localPath.c_str() << endl;
@@ -181,9 +179,9 @@ void UploadWidget::takeFileSlot(string type, string pn, string fn)
 
 void UploadWidget::doneSlots(QListWidgetItem *p)
 {
-	for (int i = 0; i < listWidget->count(); ++i) {
-		if (listWidget->item(i) == p) {
-			listWidget->takeItem(i);
+	for (int i = 0; i < ui.listWidget->count(); ++i) {
+		if (ui.listWidget->item(i) == p) {
+			ui.listWidget->takeItem(i);
 			break;
 		}
 	}

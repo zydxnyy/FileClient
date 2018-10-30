@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>登录</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>pic/user.png</normaloff>pic/user.png</iconset>
+  </property>
   <widget class="QWidget" name="formLayoutWidget">
    <property name="geometry">
     <rect>
@@ -112,6 +116,10 @@
    </property>
    <property name="text">
     <string>登陆</string>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>pic/login.png</normaloff>pic/login.png</iconset>
    </property>
   </widget>
   <widget class="QCheckBox" name="checkBox">

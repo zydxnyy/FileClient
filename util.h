@@ -12,6 +12,7 @@
 #include "stdlib.h"
 #include <direct.h>
 #include <qfiledialog.h>
+#include <qsettings.h>
 #include <functional>
 #include <QTextCodec>
 #include <sys/stat.h>
@@ -20,15 +21,17 @@
 using namespace std;
 #pragma execution_character_set("utf-8")
 
-#define SERVER_IP "10.132.100.180"
+#define SERVER_IP "114.67.37.2"
 //#define SERVER_IP "192.168.135.131"
-#define SERVER_PORT "5566"
+#define SERVER_PORT "20574"
 
 #define getIconByIndex(index) QApplication::style()->standardIcon((enum QStyle::StandardPixmap)index)
 
 #define ZERO(x) {memset((x), 0, sizeof(x));}
 
 #define OP_TYPE int
+
+//extern QSettings* setting;
 
 enum OP {
 	GETDIR, 
