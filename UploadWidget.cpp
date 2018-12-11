@@ -1,11 +1,11 @@
 #include "UploadWidget.h"
 
-UploadWidget::UploadWidget(Proj_Container* proteinProjects, Proj_Container* drugProjects, Proj_Container* animalProjects, QWidget* parent):
-	QWidget(parent), proteinProjects(proteinProjects), drugProjects(drugProjects), animalProjects(animalProjects)
+UploadWidget::UploadWidget(Proj_Container* proteinProjects, Proj_Container* drugProjects, Proj_Container* animalProjects, Proj_Container* metaProjects, QWidget* parent):
+	QWidget(parent), proteinProjects(proteinProjects), drugProjects(drugProjects), animalProjects(animalProjects), metaProjects(metaProjects)
 {
 	ui.setupUi(this);
 	localExplorer = new LocalExplorer(this);
-	remoteExplorer = new RemoteExplorer(proteinProjects, drugProjects, animalProjects, this);
+	remoteExplorer = new RemoteExplorer(proteinProjects, drugProjects, animalProjects, metaProjects, this);
 	localExplorer->setGeometry(0, 0, 490, 500);
 	remoteExplorer->setGeometry(560, 0, 490, 500);
 	localExplorer->show();
@@ -90,6 +90,7 @@ void UploadWidget::createUploadTaskSlot(string localPath, string remotePath) {
 	if (type == TYPE[0]) projects = proteinProjects, typeId = 0;
 	else if (type == TYPE[1]) projects = drugProjects, typeId = 1;
 	else if (type == TYPE[2]) projects = animalProjects, typeId = 2;
+	else if (type == TYPE[3]) projects = metaProjects, typeId = 3;
 	else {
 		QMessageBox::warning(this, "¥ÌŒÛ", "¿‡–Õ¥ÌŒÛ", QMessageBox::Yes);
 		return;
@@ -140,6 +141,7 @@ void UploadWidget::createDownloadTaskSlot(string localPath, string remotePath) {
 	if (type == TYPE[0]) typeId = 0;
 	else if (type == TYPE[1]) typeId = 1;
 	else if (type == TYPE[2]) typeId = 2;
+	else if (type == TYPE[3]) typeId = 3;
 	else {
 		QMessageBox::warning(this, "¥ÌŒÛ", "¿‡–Õ¥ÌŒÛ", QMessageBox::Yes);
 		return;

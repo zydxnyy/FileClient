@@ -14,7 +14,7 @@ FileClient::FileClient(QWidget *parent)
 		}
 	}
 
-	uploadWidget = new UploadWidget(&proteinProjects, &drugProjects, &animalProjects, this);
+	uploadWidget = new UploadWidget(&proteinProjects, &drugProjects, &animalProjects, &metaProjects, this);
 	taskWidget = new TaskWidget(this);
 	historyWidget = new HistoryWidget(this);
 	ui.tabWidget->addTab(uploadWidget, QIcon("pic/浏览.png"), QString("浏览"));
@@ -46,6 +46,7 @@ int FileClient::get_projects() {
 	proteinProjects.clear();
 	drugProjects.clear();
 	animalProjects.clear();
+	metaProjects.clear();
 	string email = my_email;
 	string token = my_token;
 	if (email.empty() || token.empty()) {
@@ -121,10 +122,30 @@ int FileClient::get_projects() {
 					unsigned int created = pdata["data"][i]["created"].asUInt();
 					string projname = pdata["data"][i]["projname"].asCString();
 					string fileHash = pdata["data"][i]["fileHash"].asCString();
-					string path = "/Animal" + projname + "/" + filename;
+					string path = "/Animal/" + projname + "/" + filename;
 					proj->files.push_back(MyFile(false, ANIMAL, projname, filename, filesize, created, email, path, fileHash));
 				}
 				animalProjects.push_back(proj);
+			}
+			//取出代理项目数据
+			root = vvv["Metabolomics"];
+			for (int i = 0; i < root.size(); ++i) {
+				Proj* proj = new Proj;
+				proj->name = root[i]["name"].asCString();
+				proj->uid = root[i]["user"].asInt();
+				proj->typeId = METABOLOMICS;
+				Json::Value pdata = root[i]["pdata"];
+				for (int i = 0; i < pdata["data"].size(); ++i) {
+					string filename = pdata["data"][i]["name"].asCString();
+					unsigned int filesize = pdata["data"][i]["size"].asUInt();
+					string email = pdata["data"][i]["email"].asCString();
+					unsigned int created = pdata["data"][i]["created"].asUInt();
+					string projname = pdata["data"][i]["projname"].asCString();
+					string fileHash = pdata["data"][i]["fileHash"].asCString();
+					string path = "/Metabolomics/" + projname + "/" + filename;
+					proj->files.push_back(MyFile(false, METABOLOMICS, projname, filename, filesize, created, email, path, fileHash));
+				}
+				metaProjects.push_back(proj);
 			}
 		}
 	}
@@ -139,6 +160,7 @@ void FileClient::takeFile(string type, string projname, string filename)
 	if (type == TYPE[0]) p = &proteinProjects;
 	else if (type == TYPE[1]) p = &drugProjects;
 	else if (type == TYPE[2]) p = &animalProjects;
+	else if (type == TYPE[3]) p = &metaProjects;
 	else return;
 
 	for (int i = 0; i < p->size(); ++i) {
@@ -202,6 +224,7 @@ void FileClient::updateFileDir(string type, QString& _projname, MyFile* pfile) {
 	if (type == TYPE[0]) p = &proteinProjects;
 	else if (type == TYPE[1]) p = &drugProjects;
 	else if (type == TYPE[2]) p = &animalProjects;
+	else if (type == TYPE[3]) p = &metaProjects;
 	else return;
 
 	for (int i = 0; i < p->size(); ++i) {

@@ -12,7 +12,7 @@ class UploadWidget: public QWidget
 {
 	Q_OBJECT
 public:
-	UploadWidget(Proj_Container* proteinProjects, Proj_Container* drugProjects, Proj_Container* animalProjects, QWidget* parent = 0);
+	UploadWidget(Proj_Container* proteinProjects, Proj_Container* drugProjects, Proj_Container* animalProjects, Proj_Container* metaProjects, QWidget* parent = 0);
 	~UploadWidget();
 
 signals:
@@ -43,5 +43,6 @@ private:
 	Proj_Container* proteinProjects;
 	Proj_Container* drugProjects;
 	Proj_Container* animalProjects;
+	Proj_Container* metaProjects;
 };
 

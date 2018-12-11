@@ -41,6 +41,7 @@ private:
 	Proj_Container proteinProjects;
 	Proj_Container drugProjects;
 	Proj_Container animalProjects;
+	Proj_Container metaProjects;
 	UploadWidget* uploadWidget;
 	TaskWidget* taskWidget;
 	HistoryWidget* historyWidget;

@@ -40,7 +40,7 @@ const string ERROR_STR[] = {
 	"文件校验失败",
 };
 
-const string TYPE[] = { "Protein", "Drug", "Animal" };
+const string TYPE[] = { "Protein", "Drug", "Animal", "Metabolomics" };
 
 string browse_file()
 {

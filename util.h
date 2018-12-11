@@ -66,6 +66,7 @@ enum PROJ_TYPE {
 	PROTEIN = 0,
 	DRUG,
 	ANIMAL,
+	METABOLOMICS,
 };
 
 extern const string ERROR_STR[];
@@ -185,8 +186,6 @@ struct Proj {
 	int typeId;
 	File_Container files;
 };
-
-void* get_py_func(const string& module_name, const string& func_name);
 
 bool json_parse(const string& s, Json::Value& v);
 

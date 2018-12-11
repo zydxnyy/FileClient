@@ -3,8 +3,8 @@
 #include <qmenu.h>
 #include "FileProp.h"
 
-RemoteExplorer::RemoteExplorer(Proj_Container* proteinProjects, Proj_Container* drugProjects, Proj_Container* animalProjects, QWidget* parent):
-	MyExplorer(parent), proteinProjects(proteinProjects), drugProjects(drugProjects), animalProjects(animalProjects), setting("win.ini", QSettings::IniFormat)
+RemoteExplorer::RemoteExplorer(Proj_Container* proteinProjects, Proj_Container* drugProjects, Proj_Container* animalProjects, Proj_Container* metaProjects, QWidget* parent):
+	MyExplorer(parent), proteinProjects(proteinProjects), drugProjects(drugProjects), animalProjects(animalProjects), metaProjects(metaProjects), setting("win.ini", QSettings::IniFormat)
 {
 	updateFileList();
 	connect(ui.listWidget, SIGNAL(acceptFileName(QString)), this, SLOT(acceptFileName(QString)));
@@ -36,7 +36,7 @@ bool RemoteExplorer::validPath() {
 		if (p.front() != '/' || p.back() != '/') return false;
 		type = p.substr(1, p.size() - 2);
 		//不属于三类
-		if (type != TYPE[0] && type != TYPE[1] && type != TYPE[2]) return false;
+		if (type != TYPE[0] && type != TYPE[1] && type != TYPE[2] && type != TYPE[3]) return false;
 		return true;
 	case 3:
 		if (p.front() != '/' || p.back() != '/') return false;
@@ -46,6 +46,7 @@ bool RemoteExplorer::validPath() {
 		if (type == TYPE[0]) projects = proteinProjects;
 		else if (type == TYPE[1]) projects = drugProjects;
 		else if (type == TYPE[2]) projects = animalProjects;
+		else if (type == TYPE[3]) projects = metaProjects;
 		else return false;
 		//没有找到项目名
 		for (int i = 0; i < projects->size(); ++i) if (projectname == projects->at(i)->name) return true;
@@ -66,7 +67,7 @@ void RemoteExplorer::getFileList()
 	}
 	//根目录，显示所有的种类
 	if (slashCnt == 1) {
-		for (int i = 0; i < 3; ++i) {
+		for (int i = 0; i < 4; ++i) {
 			type = TYPE[i];
 			int filesize = 0;
 			bool isDir = true;
@@ -79,6 +80,7 @@ void RemoteExplorer::getFileList()
 		if (type == TYPE[0]) { projects = proteinProjects; typeId = PROTEIN; }
 		else if (type == TYPE[1]) { projects = drugProjects; typeId = DRUG; }
 		else if (type == TYPE[2]) { projects = animalProjects; typeId = ANIMAL; }
+		else if (type == TYPE[3]) { projects = metaProjects; typeId = METABOLOMICS; }
 		else return;
 		for (int i = 0; i < projects->size(); ++i) {
 			string projname = projects->at(i)->name;
@@ -97,6 +99,7 @@ void RemoteExplorer::getFileList()
 		if (type == TYPE[0]) { projects = proteinProjects; typeId = PROTEIN; }
 		else if (type == TYPE[1]) { projects = drugProjects; typeId = DRUG; }
 		else if (type == TYPE[2]) { projects = animalProjects; typeId = ANIMAL; }
+		else if (type == TYPE[3]) { projects = metaProjects; typeId = METABOLOMICS; }
 		else return;
 		qDebug() << "Type=" << type.c_str() << "projname=" << projname.c_str();
 		for (int i = 0; i < projects->size(); ++i) {
@@ -175,6 +178,7 @@ void RemoteExplorer::delFile(bool)
 	if (type == TYPE[0]) { projects = proteinProjects; typeId = PROTEIN; }
 	else if (type == TYPE[1]) { projects = drugProjects; typeId = DRUG; }
 	else if (type == TYPE[2]) { projects = animalProjects; typeId = ANIMAL; }
+	else if (type == TYPE[3]) { projects = metaProjects; typeId = METABOLOMICS; }
 	else return;
 
 	int sel = -1;

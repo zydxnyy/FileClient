@@ -10,7 +10,7 @@ class RemoteExplorer :
 {
 	Q_OBJECT
 public:
-	RemoteExplorer(Proj_Container* proteinProjects, Proj_Container* drugProjects, Proj_Container* animalProjects, QWidget* parent = 0);
+	RemoteExplorer(Proj_Container* proteinProjects, Proj_Container* drugProjects, Proj_Container* animalProjects, Proj_Container* metaProjects, QWidget* parent = 0);
 	~RemoteExplorer();
 	virtual bool validPath();
 
@@ -34,6 +34,7 @@ private:
 	Proj_Container* proteinProjects;
 	Proj_Container* drugProjects;
 	Proj_Container* animalProjects;
+	Proj_Container* metaProjects;
 	Proj_Container* projects;
 	QListWidgetItem* item;
 	QSettings setting;
